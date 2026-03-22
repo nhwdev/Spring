@@ -1,66 +1,128 @@
-# ========================
-# Eclipse
-# ========================
-.metadata/
-
-**/.classpath
-**/.project
-**/.settings/
-**/bin/
-
-# ========================
-# IntelliJ IDEA
-# ========================
-**/.idea/
-**/*.iml
-**/out/
-
-# ========================
-# VSCode
-# ========================
-**/.vscode/
-
-# ========================
-# Java / Spring / Build
-# ========================
-**/target/
-**/build/
-**/.gradle/
-
+# =====================
+# Build Output
+# =====================
 *.class
-*.log
-
-# ========================
-# Spring Boot
-# ========================
 *.jar
 *.war
 *.ear
-*.pid
+bin/
+build/
+out/
+target/
 
-# ========================
-# Node
-# ========================
-**/node_modules/
+# =====================
+# Eclipse
+# =====================
+.project
+.classpath
+.settings/
+.metadata/
+RemoteSystemsTempFiles/
+.recommenders/
+.wtpmodules
+wtpwebapps/
+WEB-INF/classes/
+WEB-INF/lib/
+
+# =====================
+# IntelliJ IDEA
+# =====================
+.idea/
+!.idea/codeStyles/
+!.idea/inspectionProfiles/
+*.iml
+*.iws
+*.ipr
+META-INF/
+
+# =====================
+# VSCode
+# =====================
+.vscode/
+*.code-workspace
+
+# =====================
+# Maven
+# =====================
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# =====================
+# Gradle
+# =====================
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+
+# =====================
+# Spring Boot
+# =====================
+application-local.yml
+application-local.properties
+application-secret.yml
+application-secret.properties
+application-dev.yml
+application-dev.properties
+application-prod.yml
+application-prod.properties
+*.properties.local
+
+# =====================
+# Server (Tomcat)
+# =====================
+Servers/
+.tomcat/
+*.catalina.out
+
+# =====================
+# Database
+# =====================
+*.sql.local
+database.properties
+db.properties
+hibernate.cfg.xml.local
+
+# =====================
+# 환경 변수 / 시크릿
+# =====================
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+*.p12
+secrets.properties
+
+# =====================
+# Node.js (React / Vue 등)
+# =====================
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.npm
+dist/
 
-# ========================
-# 환경 파일
-# ========================
-.env
-**/application-local.yml
-**/application-secret.yml
+# =====================
+# 테스트 / 커버리지
+# =====================
+coverage/
+*.exec
 
-# ========================
+# =====================
 # OS
-# ========================
+# =====================
 .DS_Store
 Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
 
-# ========================
-# 기타
-# ========================
-*.swp
-*.swo
+# =====================
+# 로그 / 임시 파일
+# =====================
+*.log
+*.tmp
+*.temp
+logs/
