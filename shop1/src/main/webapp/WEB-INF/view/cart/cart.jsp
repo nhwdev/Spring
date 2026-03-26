@@ -22,7 +22,7 @@
      <%-- ${cart.total} : cart 객체의 getTotal() 메서드 호출. 결과값을 출력 --%>
 </table>
 <br>${message}<br>
-<a href="../item/list">상품목록</a>
-<a href="checkout">주문하기</a>
+<a href="../item/list" class="btn btn-secondary">상품목록</a>
+<a href="checkout" class="btn btn-success">주문하기</a>
 </body>
 </html>

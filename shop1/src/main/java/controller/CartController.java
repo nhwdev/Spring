@@ -33,10 +33,10 @@ public class CartController {
     }
 
     @RequestMapping("cartView")
-    public String View(Integer id, Integer quantity, HttpSession session, Model model) {
+    public String view(HttpSession session, Model model) {
         Cart cart = (Cart) session.getAttribute("cart");
-        model.addAttribute("message", "장바구니 상품 조회");
-        session.setAttribute("cart", cart);
+        model.addAttribute("message", "장바구니에 상품 조회");
+        model.addAttribute("cart", cart);
         return "cart/cart";
     }
 
@@ -53,6 +53,9 @@ public class CartController {
         return "cart/cart";
     }
 
+    /*
+     * CartAspect.cartCheck()의 대상이 되는 메서드
+     */
     @RequestMapping("checkout")
     public String checkout(HttpSession session) {
         return null; // cart/checkout.jsp 요청

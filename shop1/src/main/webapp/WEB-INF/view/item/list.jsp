@@ -5,8 +5,8 @@
     <title>상품 목록</title>
 </head>
 <body>
-<a href="create">상품등록</a>
-<a href="../cart/cartView" style="float:right">장바구니</a>
+<a href="create" class="btn btn-info">상품등록</a>
+<a href="../cart/cartView" style="float:right" class="btn btn-info">장바구니</a>
 <table class="table">
     <tr><th>상품ID</th><th>상품명</th><th>가격</th><th>수정</th><th>삭제</th></tr>
     <c:forEach items="${itemList}" var="item">

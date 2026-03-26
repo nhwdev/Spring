@@ -15,3 +15,15 @@ insert into item values (6, '귤', 1000, '시네피린을 다량 함유하고 �
 commit;
 
 select * from item;
+
+create table useraccount (
+   userid varchar(10) primary key,  -- 아이디
+   password varchar(15),            -- 비밀번호
+   username varchar(20),            -- 이름
+   phoneno varchar(20),             -- 전화번호
+   postcode varchar(7),             -- 우편번호
+   address varchar(30),             -- 주소
+   email varchar(50),               -- 이메일
+   birthday datetime                -- 생일
+);
+select * from useraccount
