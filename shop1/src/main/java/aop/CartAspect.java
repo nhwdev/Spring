@@ -1,7 +1,9 @@
 package aop;
 
 import dto.Cart;
+import dto.User;
 import exception.CartException;
+import exception.LoginException;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
@@ -19,13 +21,22 @@ public class CartAspect {
      *  args(.., session) : 매개변수 목록의 마지막 매개변수값이 HttpSession 타입인 메서드
      *
      * advice : @Before. 필수메서드(pointcut 으로 지정된 메서드) 실행 전
+     *
+     * 1. 로그인 필수
+     * 2. 관리자로 로그인 된 경우는 주문 불가
      */
-    @Before("execution(* controller.Cart*.check*(..)) && args(..,session)")
+    @Before("execution(* controller.Cart*.check*(..)) && args(.., session)")
     public void cartCheck(HttpSession session) throws Throwable {
         Cart cart = (Cart) session.getAttribute("cart"); // 등록된 장바구니 객체
-        if(cart == null || cart.getItemSetList().isEmpty()) { // 장바구니에 상품이 없는 경우
+        if(cart == null || cart.getItemSetList().size() == 0) { // 장바구니에 상품이 없는 경우
             throw new CartException("장바구니에 상품을 추가하세요.", "../item/list");
             // 예외 발생시 정상적인 수행을 멈추고, 예외처리 알고리즘 실행
+        }
+        User lgoinUser = (User)session.getAttribute("loginUser");
+        if(lgoinUser == null || !(lgoinUser instanceof User)) //로그아웃 상태
+            throw new LoginException("로그인이 필요합니다.", "../user/login");
+        if(lgoinUser.getUserid().equals("admin")) {
+            throw new LoginException("관리자는 주문할 수 없습니다.", "../user/mypage?userid=" + lgoinUser.getUserid());
         }
     }
 }

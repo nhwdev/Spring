@@ -67,6 +67,8 @@ public class MvcConfig implements WebMvcConfigurer {
          * exception.CartException 예외가 발생하면, /WEB-INF/view/exception.jsp를 호출
          */
         pr.put("exception.CartException", "exception");
+        pr.put("exception.LoginException", "exception");
+        pr.put("exception.ShopException", "exception");
         ser.setExceptionMappings(pr);
         return ser;
     }

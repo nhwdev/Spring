@@ -20,4 +20,16 @@ public class UserService {
     public User getUser(String userid) {
         return dao.selectOne(userid);
     }
+
+    public void updUser(User user) {
+        dao.update(user);
+    }
+
+    public void delUser(String userid) {
+        dao.delete(userid);
+    }
+
+    public void pwUser(String userid, String pass) {
+        dao.update(userid, pass);
+    }
 }

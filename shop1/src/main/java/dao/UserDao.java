@@ -23,4 +23,16 @@ public class UserDao {
     public User selectOne(String userid) {
         return template.getMapper(cls).selectOne(userid);
     }
+
+    public void update(User user) {
+        template.getMapper(cls).update(user);
+    }
+
+    public void delete(String userid) {
+        template.getMapper(cls).delete(userid);
+    }
+
+    public void update(String userid, String pass) {
+        template.getMapper(cls).pwUser(userid, pass);
+    }
 }

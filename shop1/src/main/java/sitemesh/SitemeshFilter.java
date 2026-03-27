@@ -10,7 +10,9 @@ public class SitemeshFilter extends ConfigurableSiteMeshFilter{
 	// Connection Pool
     @Override
     protected void applyCustomConfiguration(SiteMeshFilterBuilder builder){
-        builder.addDecoratorPath("/*", "layout.jsp");
+        builder.addDecoratorPath("/*", "layout.jsp")
+                .addExcludedPath("/user/idsearch*")
+                .addExcludedPath("/user/pwsearch*");
     }
     
 }
