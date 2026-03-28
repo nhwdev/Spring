@@ -13,7 +13,7 @@ public class UserService {
     @Autowired
     private UserDao dao;
 
-    public void userInsert(User user) {
+    public void insUser(User user) {
         dao.insert(user);
     }
 

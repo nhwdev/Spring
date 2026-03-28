@@ -139,7 +139,7 @@ public class UserController {
         }
         // DB에 등록
         try {
-            service.userInsert(user);
+            service.insUser(user);
         } catch (DataIntegrityViolationException e) { // 키값 중복된 경우
             e.printStackTrace();
             bindingResult.reject("error.duplicate.user");
@@ -236,18 +236,18 @@ public class UserController {
     @PostMapping("{url}search")
     public ModelAndView search(User user, BindingResult bindingResult, @PathVariable String url) {
         ModelAndView mav = new ModelAndView();
-        if(url.equals("pw")) {
-            if(user.getUserid() == null || user.getUserid().trim().equals("")) {
+        if (url.equals("pw")) {
+            if (user.getUserid() == null || user.getUserid().trim().equals("")) {
                 bindingResult.rejectValue("userid", "error.required");
             }
         }
-        if(user.getEmail() == null || user.getEmail().trim().equals("")){
+        if (user.getEmail() == null || user.getEmail().trim().equals("")) {
             bindingResult.rejectValue("email", "error.required");
         }
-        if(user.getPhoneno() == null || user.getPhoneno().trim().equals("")){
+        if (user.getPhoneno() == null || user.getPhoneno().trim().equals("")) {
             bindingResult.rejectValue("phoneno", "error.required");
         }
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             bindingResult.reject("error.input.check");
             return mav;
         }
@@ -256,24 +256,32 @@ public class UserController {
 
     @GetMapping("password2")
     public String chgUserForm(UserPassword userPassword, HttpSession session) {
-        if(session.getAttribute("loginUser") == null){
+        if (session.getAttribute("loginUser") == null) {
             throw new ShopException("로그인 하셔야합니다.", "login");
         }
         return null;
     }
 
     @PostMapping("password2")
-    public String chgUser(UserPassword userPassword, String password, String chgpass, String chgpass2, BindingResult bindingResult, HttpSession session){
-        ModelAndView mav = new ModelAndView();
-        if(password.trim().length() < 3 || password.trim().length()>10) {
+    public String chgUser(UserPassword userPassword, BindingResult bindingResult, HttpSession session) {
+        if (userPassword.getPassword().trim().length() < 3 || userPassword.getPassword().trim().length() > 10) {
             bindingResult.rejectValue("password", "error.required");
         }
-        if(chgpass.trim().length() < 3 || chgpass.trim().length()>10) {
+        if (userPassword.getChgpass().trim().length() < 3 || userPassword.getChgpass().trim().length() > 10) {
             bindingResult.rejectValue("chgpass", "error.required");
         }
-        if(chgpass2.equals("") || !chgpass.equals(chgpass2)) {
+        if (userPassword.getChgpass2().equals("") || !userPassword.getChgpass().equals(userPassword.getChgpass2())) {
             bindingResult.rejectValue("chgpass2", "error.required");
         }
-        return null;
+        if (bindingResult.hasErrors()) {
+            return "user/password2";
+        }
+        try {
+            service.pwUser(userPassword.getUserid(), userPassword.getChgpass2());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ShopException("비밀번호 변경에 실패했습니다.", "redirect:password2");
+        }
+        return "redirect:mypage?userid=" + userPassword.getUserid();
     }
 }
