@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -34,5 +35,26 @@ public class UserDao {
 
     public void update(String userid, String pass) {
         template.getMapper(cls).pwUser(userid, pass);
+    }
+
+    public String search(User user, String url) {
+        String col = url.equals("pw") ? "password" : "userid";
+        param.clear();
+        param.put("col", col);
+        param.put("userid", user.getUserid());
+        param.put("email", user.getEmail());
+        param.put("phoneno", user.getPhoneno());
+        return template.getMapper(cls).search(param);
+    }
+
+    public List<User> list() {
+        param.clear();
+        return template.getMapper(cls).selectList(param);
+    }
+
+    public List<User> list(String[] idchks) {
+        param.clear();
+        param.put("userids", idchks);
+        return template.getMapper(cls).selectList(param);
     }
 }

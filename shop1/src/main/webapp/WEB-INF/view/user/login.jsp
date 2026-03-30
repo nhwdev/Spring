@@ -8,7 +8,7 @@
 </head>
 <body>
 <h2>사용자 로그인</h2>
-<form:form modelAttribute="user" method="post" action="login" name="loginForm">
+<form:form modelAttribute="user" method="post" action="login" name="loginform">
   <spring:hasBindErrors name="user">
     <font color="red"><c:forEach items="${errors.globalErrors}" var="error"><spring:message code="${error.code}"/></c:forEach> </font>
   </spring:hasBindErrors>

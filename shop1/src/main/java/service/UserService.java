@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -31,5 +32,18 @@ public class UserService {
 
     public void pwUser(String userid, String pass) {
         dao.update(userid, pass);
+    }
+
+    public String searchUser(User user, String url) {
+        return dao.search(user, url);
+    }
+
+    public List<User> listUser() {
+        return dao.list();
+    }
+
+    // 오버로딩 메서드
+    public List<User> listUser(String[] idchks) {
+        return dao.list(idchks);
     }
 }

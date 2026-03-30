@@ -23,7 +23,8 @@
             --accent2:  #d45c80;
             --accent3:  #f4a7bc;
             --text:     #2d1f26;
-            --muted:    #7a5462;
+            --muted:    #5a3d48;
+            --muted2:   #7a5462;
             --border:   #f0d0da;
         }
 
@@ -51,8 +52,8 @@
             position: absolute;
             inset: 0;
             background:
-                radial-gradient(ellipse 60% 60% at 25% 50%, rgba(232,120,154,.12) 0%, transparent 70%),
-                radial-gradient(ellipse 50% 50% at 75% 50%, rgba(212,92,128,.07) 0%, transparent 70%);
+                    radial-gradient(ellipse 60% 60% at 25% 50%, rgba(232,120,154,.12) 0%, transparent 70%),
+                    radial-gradient(ellipse 50% 50% at 75% 50%, rgba(212,92,128,.07) 0%, transparent 70%);
             pointer-events: none;
         }
         .jumbotron h1 {
@@ -112,9 +113,9 @@
             border-color: var(--accent);
         }
         .nav-link {
-            font-size: .82rem !important;
+            font-size: .85rem !important;
             font-weight: 500;
-            color: var(--muted) !important;
+            color: var(--text) !important;
             padding: 6px 14px !important;
             border-radius: 4px;
             transition: all .2s;
@@ -150,13 +151,14 @@
         }
         .col-sm-4 h5 {
             font-size: .78rem;
-            color: var(--muted);
+            font-weight: 600;
+            color: var(--text);
             margin-bottom: 8px;
         }
         .col-sm-4 p {
             font-size: .85rem;
             color: var(--muted);
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
         .fakeimg {
@@ -167,15 +169,16 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--accent);
+            color: var(--accent2);
             font-size: .82rem;
+            font-weight: 600;
             margin-bottom: 12px;
         }
 
         /* sidebar nav pills */
         .nav-pills .nav-link {
             font-size: .85rem !important;
-            color: var(--muted) !important;
+            color: var(--text) !important;
             padding: 7px 14px !important;
             border-radius: 6px;
             border: 1px solid transparent;
@@ -206,13 +209,18 @@
             min-height: 400px;
             box-shadow: 0 2px 16px rgba(232,120,154,.07);
         }
-        .col-sm-8 h1, .col-sm-8 h2, .col-sm-8 h3 {
+        .col-sm-8 h1,
+        .col-sm-8 h2,
+        .col-sm-8 h3 {
             color: var(--text);
+            font-weight: 700;
+            line-height: 1.4;
         }
-        .col-sm-8 p, .col-sm-8 span {
-            color: var(--muted);
-            font-size: .9rem;
-            line-height: 1.7;
+        .col-sm-8 p,
+        .col-sm-8 span {
+            color: var(--text);
+            font-size: .92rem;
+            line-height: 1.8;
         }
 
         /* ── SCROLLBAR ── */
@@ -238,7 +246,7 @@
     <div class="collapse navbar-collapse" id="collapsibleNavbar">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="${path}/user/mypage?userid=${loginUser.userid}">회원관리</a>
+                <a class="nav-link" href="${path}/user/mypage?userid=${loginUser.userid}">마이페이지</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="${path}/item/list">상품관리</a>

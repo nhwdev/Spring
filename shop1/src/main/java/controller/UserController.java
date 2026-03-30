@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import service.UserService;
+import util.ShopUtil;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -233,11 +234,13 @@ public class UserController {
      *  idsearch 요청 : url = id
      *  pwsearch 요청 : url = pw
      */
-    @PostMapping("{url}search")
+    @PostMapping("{url}search") // xxsearch 요청시 호출되는 메서드(idsearch, pwsearch 요청)
     public ModelAndView search(User user, BindingResult bindingResult, @PathVariable String url) {
         ModelAndView mav = new ModelAndView();
-        if (url.equals("pw")) {
+        String code = "error.userid.search";
+        if (url.equals("pw")) { // pwsearch 요청인 경우
             if (user.getUserid() == null || user.getUserid().trim().equals("")) {
+                code = "error.password.search";
                 bindingResult.rejectValue("userid", "error.required");
             }
         }
@@ -251,6 +254,21 @@ public class UserController {
             bindingResult.reject("error.input.check");
             return mav;
         }
+        // 입력값이 정상인 경우
+        // result = DB에서 조회한 아이디값 또는 비밀번호값
+        String result = service.searchUser(user, url);
+        if (result == null) { // 아이디 또는 비밀번호를 찾지 못함
+            bindingResult.reject(code);
+            return mav;
+        }
+        // 비밀번호 검색인 경우 비밀번호를 임의의 문자로 변경
+        if(url.equals("pw")){
+            result = ShopUtil.getRandomString(6, true, true);
+            service.pwUser(user.getUserid(), result); // 비밀번호 변경
+        }
+        mav.addObject("result", result);
+        mav.addObject("title", url.equals("pw") ? "비밀번호" : "아이디");
+        mav.setViewName("search"); // 뷰이름. /WEB-INF/view/search.jsp 페이지 선택
         return mav;
     }
 
@@ -261,7 +279,6 @@ public class UserController {
         }
         return null;
     }
-
     @PostMapping("password2")
     public String chgUser(UserPassword userPassword, BindingResult bindingResult, HttpSession session) {
         if (userPassword.getPassword().trim().length() < 3 || userPassword.getPassword().trim().length() > 10) {
@@ -270,6 +287,7 @@ public class UserController {
         if (userPassword.getChgpass().trim().length() < 3 || userPassword.getChgpass().trim().length() > 10) {
             bindingResult.rejectValue("chgpass", "error.required");
         }
+        // 비밀번호 변경과 비밀번호 변경 확인 입력 값이 같은지 검증
         if (userPassword.getChgpass2().equals("") || !userPassword.getChgpass().equals(userPassword.getChgpass2())) {
             bindingResult.rejectValue("chgpass2", "error.required");
         }
