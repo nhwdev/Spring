@@ -6,12 +6,14 @@
 </head>
 <body>
 <table>
-    <tr><th>${title} : </th><td>${result}</td></tr>
+    <c:if test="${title=='아이디'}"><tr><th>${title} : </th><td>${result}</td></tr></c:if>
+    <c:if test="${title!='아이디'}"><tr><th colspan="2">비밀번호를 이메일로 보내드렸습니다.</th></tr></c:if>
     <tr><td colspan="2">
         <c:if test="${title=='아이디'}">
             <input type="button" value="아이디 전송" onclick="sendclose()"></c:if>
         <c:if test="${title!='아이디'}">
-            <input type="button" value="닫기" onclick="self.close()"></c:if></td></tr>
+            <input type="button" value="닫기" onclick="self.close()"></c:if>
+    </td></tr>
 </table>
 <script type="text/javascript">
     function sendclose() {

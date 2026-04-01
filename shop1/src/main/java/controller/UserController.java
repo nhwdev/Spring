@@ -257,8 +257,8 @@ public class UserController {
         ModelAndView mav = new ModelAndView();
         String code = "error.userid.search";
         if (url.equals("pw")) { // pwsearch 요청인 경우
-            if (user.getUserid() == null || user.getUserid().trim().equals("")) {
                 code = "error.password.search";
+            if (user.getUserid() == null || user.getUserid().trim().equals("")) {
                 bindingResult.rejectValue("userid", "error.required");
             }
         }
