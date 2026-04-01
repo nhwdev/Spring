@@ -1,7 +1,9 @@
 package service;
 
 import dao.ItemDao;
-import dto.Item;
+import dao.OrderDao;
+import dao.OrderItemDao;
+import dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -19,6 +21,10 @@ import java.util.List;
 public class ItemService {
     @Autowired
     private ItemDao itemDao;
+    @Autowired
+    private OrderDao orderDao;
+    @Autowired
+    private OrderItemDao orderItemDao;
 
     public List<Item> itemList() {
         return itemDao.list();
@@ -64,5 +70,36 @@ public class ItemService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public Order orderItem(User loginUser, Cart cart) {
+        int maxorderid = orderDao.getMaxOrderId();  // orderid 값의 최대값
+        Order order = new Order();                  // Order 객체 생성
+        order.setOrderid(maxorderid + 1);           // 최대값 + 1
+        order.setUser(loginUser);                   // 로그인한 User 객체 정보
+        order.setUserid(loginUser.getUserid());     // 로그인한 userid 정보
+        orderDao.insert(order);                     // order 테이블에 저장
+        int seq = 0;
+        for (ItemSet is : cart.getItemSetList()) {   // 주문상품
+            OrderItem orderItem = new OrderItem(order.getOrderid(), ++seq, is);
+            order.getItemList().add(orderItem);
+            orderItemDao.insert(orderItem); // 주문상품(saleitem) 테이블에 저장
+        }
+        return order; // 주문정보, 고객정보, 주문상품
+    }
+
+    public List<Order> orderList(String userid) {
+        // [{orderid:1,userid:0001,...},{orderid:3,userid:0001,...}]
+        List<Order> list = orderDao.orderList(userid); // userid가 주문한 order 정보 목록
+        for(Order od : list) {
+            // orderItemList : orderid에 해당하는 주문상품 목록
+            List<OrderItem> orderItemList = orderItemDao.orderList(od.getOrderid()); // 주문번호에 해당하는 주문상품 목록
+            for(OrderItem oi : orderItemList) {
+                Item item = itemDao.selectOne(oi.getItemid()); //주문상품의 상품정보
+                oi.setItem(item); // 상품 정보
+            }
+            od.setItemList(orderItemList);
+        }
+        return list;
     }
 }

@@ -1,12 +1,11 @@
 package controller;
 
-import dto.Cart;
-import dto.Item;
-import dto.ItemSet;
+import dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 import service.ItemService;
 
 import javax.servlet.http.HttpSession;
@@ -59,5 +58,23 @@ public class CartController {
     @RequestMapping("checkout")
     public String checkout(HttpSession session) {
         return null; // cart/checkout.jsp 요청
+    }
+
+    /*
+     * CartAspect.cartCheck()의 대상이 되는 메서드
+     * 1. 로그인
+     * 2. Cart 상품 존재
+     * 3. 관리자는 거래 불가
+     */
+    @RequestMapping("orderitem")
+    public ModelAndView checkorder(HttpSession session) {
+        ModelAndView mav = new ModelAndView();
+        Cart cart = (Cart)session.getAttribute("cart");           // 장바구니 상품
+        User loginUser = (User)session.getAttribute("loginUser"); // 로그인 정보
+        // orders, orderitem 테이블에 저장. order 객체 리턴
+        Order order = service.orderItem(loginUser, cart);
+        session.removeAttribute("cart"); // 장바구니 상품 제거
+        mav.addObject("order", order); // 데이터 전송
+        return mav;
     }
 }

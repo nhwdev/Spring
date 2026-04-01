@@ -1,5 +1,7 @@
 package controller;
 
+import dto.Mail;
+import dto.Order;
 import dto.User;
 import dto.UserPassword;
 import exception.ShopException;
@@ -12,17 +14,30 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import service.ItemService;
 import service.UserService;
 import util.ShopUtil;
 
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.FileInputStream;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 
 @Controller
 @RequestMapping("user")
 public class UserController {
     @Autowired
     private UserService service;
+    @Autowired
+    private ItemService itemService;
 
     // http://localhost:8080/shop1/user/join → /WEB-INF/view/user/join.jsp
     @GetMapping("*") // Get 방식의 모든 요청
@@ -84,7 +99,10 @@ public class UserController {
         ModelAndView mav = new ModelAndView();
 //        User user = (User) session.getAttribute("loginUser");
         User user = service.getUser(userid);
+        // orderlist : 사용자가 주문한 주문데이터 정보 목록. order 테이블의 정보 + orderItem 테이블 정보 + item 테이블의 정보
+        List<Order> orderlist = itemService.orderList(userid);
         mav.addObject("user", user);
+        mav.addObject("orderlist", orderlist);
         return mav;
     }
 
@@ -235,7 +253,7 @@ public class UserController {
      *  pwsearch 요청 : url = pw
      */
     @PostMapping("{url}search") // xxsearch 요청시 호출되는 메서드(idsearch, pwsearch 요청)
-    public ModelAndView search(User user, BindingResult bindingResult, @PathVariable String url) {
+    public ModelAndView search(User user, BindingResult bindingResult, HttpServletRequest request, @PathVariable String url) {
         ModelAndView mav = new ModelAndView();
         String code = "error.userid.search";
         if (url.equals("pw")) { // pwsearch 요청인 경우
@@ -265,13 +283,47 @@ public class UserController {
         if(url.equals("pw")){
             result = ShopUtil.getRandomString(6, true, true);
             service.pwUser(user.getUserid(), result); // 비밀번호 변경
+            Mail mail = new Mail();
+            String id = "nhw.dev";
+            String pw = "ffzlunjluxzygeta";
+            mail.setGoogleid(id);
+            mail.setGooglepw(pw);
+            Properties prop = new Properties();
+            try{
+                String path = request.getServletContext().getRealPath("/") + "/WEB-INF/CLasses/mail.properties";
+                FileInputStream fis = new FileInputStream(path);
+                prop.load(fis);
+                Authenticator auth = new Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(mail.getGoogleid(), mail.getGooglepw());
+                    }
+                };
+                mail.setRecipient(user.getEmail());
+                Session session = Session.getInstance(prop, auth);
+                MimeMessage mailmsg = new MimeMessage(session);
+                mailmsg.setFrom(new InternetAddress(mail.getGoogleid() + "@gmail.com"));
+                String email = mail.getRecipient();
+                InternetAddress addrs = new InternetAddress(new String(email.getBytes("utf-8"), "8859_1"));
+                mailmsg.setRecipient(Message.RecipientType.TO, addrs);
+                mailmsg.setSentDate(new Date());
+                mailmsg.setSubject("비밀번호 변경 메일");
+                MimeBodyPart message = new MimeBodyPart();
+                message.setContent("변경된 비밀번호: " + result, "text/plain; charset=utf-8");
+                Multipart multipart = new MimeMultipart();
+                multipart.addBodyPart(message);
+                mailmsg.setContent(multipart);
+                Transport.send(mailmsg);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         mav.addObject("result", result);
         mav.addObject("title", url.equals("pw") ? "비밀번호" : "아이디");
         mav.setViewName("search"); // 뷰이름. /WEB-INF/view/search.jsp 페이지 선택
         return mav;
     }
-
+//=================================================================================================================
     @GetMapping("password2")
     public String chgUserForm(UserPassword userPassword, HttpSession session) {
         if (session.getAttribute("loginUser") == null) {

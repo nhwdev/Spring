@@ -27,3 +27,44 @@ create table useraccount (
    birthday datetime                -- 생일
 );
 select * from useraccount
+
+CREATE TABLE orders ( -- 주문정보
+   orderid   int         PRIMARY KEY, -- 번호를 증가시키면서 key로 사용
+   userid    varchar(10) NOT NULL,    -- 사용자 아이디
+   orderdate datetime,                -- 주문일자
+   FOREIGN KEY (userid)  REFERENCES useraccount (userid) -- 등록된 사용자만 주문 가능
+);
+
+CREATE TABLE orderitem (        -- 주문상품
+   orderid  int,                -- 주문번호
+   seq      int,                -- 주문 상품번호
+   itemid   int NOT NULL,       -- 상품번호
+   quantity int,                -- 수량
+   PRIMARY KEY (orderid, seq),
+   FOREIGN KEY (orderid) REFERENCES orders (orderid),
+   FOREIGN KEY (itemid)  REFERENCES item (id)
+);
+
+-- 답변글 게시판
+num | grp | grplevel | grpstep
+ 2  |  2  |    0     |    1     → 2번 원글
+ 4  |  2  |    1     |    2     → 2번 답변글
+ 1  |  1  |    0     |    1     → 1번 원글
+ 3  |  1  |    1     |    2     → 1번 답변글
+-- 페이지 처리
+-- 한 페이지에 10개의 게시물만 출력
+-- 한페이지에 10개의 페이지 번호만 출력
+create table board (
+   num int primary key,   -- 게시글번호. 기본키
+   writer varchar(30),    -- 작성자이름
+   pass varchar(20),      -- 비밀번호
+   title varchar(100),    -- 글제목
+   content varchar(2000), -- 글내용
+   file1 varchar(200),    -- 첨부파일명
+   boardid varchar(2),    -- 게시판종류:1:공지사항, 2:자유게시판, 3:QNA
+   regdate datetime,      -- 등록일시
+   readcnt int(10),       -- 조회수. 상세보기 시 1씩증가
+   grp int,               -- 답글 작성시 원글의 게시글번호
+   grplevel int(3),       -- 답글의 레벨.
+   grpstep int(5)         -- 그룹의 출력 순서
+);

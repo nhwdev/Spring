@@ -49,7 +49,8 @@ public class AdminController {
         return mav;                            // 뷰 이름은 자동으로 "admin/list"로 매핑됨 (RequestMapping 경로 기반)
     }
 
-    //String[] idchks : 화면에서 전송된 idchks 파라미터가 여러개인 경우. request.getParameterValues(파라미터이름)
+    // String[] idchks : 화면에서 전송된 idchks 파라미터가 여러개인 경우. request.getParameterValues(파라미터이름)
+    // idcks : 사용자 아이디값들 저장
     @PostMapping("mailform")  // POST 방식으로 "admin/mailform" 요청이 들어올 때 실행
     public String mailform(String[] idchks, Model model) {
         if (idchks == null || idchks.length == 0) {
@@ -58,7 +59,7 @@ public class AdminController {
         }
         // DB에서 idchks내의 userid값에 해당하는 User 객체들 조회
         List<User> list = service.listUser(idchks);  // 선택된 회원들만 조회
-        dto.Mail mail = new Mail();                  // 메일 정보를 담을 DTO 객체 생성
+        Mail mail = new Mail();                  // 메일 정보를 담을 DTO 객체 생성
         StringBuilder recipient = new StringBuilder(); // 수신자 목록을 문자열로 만들기 위한 빌더
         for (User u : list) {
             // 테스트1<test1@aaa.bbb>,테스트2<test2@aaa.bbb>, ...
@@ -95,13 +96,18 @@ public class AdminController {
         try {
             // getRealPath("/")로 웹 앱의 실제 배포 경로를 가져와 mail.properties 파일 경로 조합
             String path = request.getServletContext().getRealPath("/") + "/WEB-INF/classes/mail.properties";
+            // fis : mail.properties 파일을 읽기
             FileInputStream fis = new FileInputStream(path); // 파일을 바이트 스트림으로 읽기
+            // mail.properties 파일의 key=value 값으로 데이터 저장
             prop.load(fis);                                  // 파일 내용을 Properties 객체에 로드
+            // 구글 아이디로 메일 전송
             prop.put("mail.smtp.user", mail.getGoogleid()); // 발신자 계정을 prop에 추가로 세팅
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        // mail : 화면에서 입력한 데이터
+        // prop : 메일 전송을 위한 환경설정 데이터
         if (sendMail(mail, prop)) {                          // 실제 메일 전송 메서드 호출
             model.addAttribute("message", "메일 전송이 완료되었습니다.");
         } else {
@@ -112,15 +118,18 @@ public class AdminController {
     }
 
     private boolean sendMail(Mail mail, Properties prop) {
+        // Authenticator 객체 : 메일 인증 객체
         MyAuthenticator auth = new MyAuthenticator(mail.getGoogleid(), mail.getGooglepw()); // 구글 계정 인증 객체 생성
+        // session : 구글에 메일전송을 할 수 있는 연결 객체
         Session session = Session.getInstance(prop, auth); // SMTP 설정 + 인증 정보로 메일 세션 생성
+        // session을 이용하여 메일객체 생성
         MimeMessage mailmsg = new MimeMessage(session);    // 실제로 전송할 메일 메시지 객체 생성
         try {
             // 발신자 주소 설정 (googleid + "@gmail.com" 형태)
             mailmsg.setFrom(new InternetAddress(mail.getGoogleid() + "@gmail.com"));
 
             List<InternetAddress> addrs = new ArrayList<InternetAddress>(); // 수신자 주소 리스트
-            String[] emails = mail.getRecipient().split(",");               // "이름<이메일>," 형식을 ","로 분리
+            String[] emails = mail.getRecipient().split(","); // "이름<이메일>," 형식을 ","로 분리
             for (String email : emails) {
                 try {
                     // 한글 이름이 깨지지 않도록 UTF-8 → ISO-8859-1로 인코딩 변환 후 InternetAddress 생성
@@ -136,6 +145,7 @@ public class AdminController {
                 arr[i] = addrs.get(i);
             }
             mailmsg.setRecipients(Message.RecipientType.TO, arr); // 수신자(TO) 설정
+            // mailmsg.setRecipients(Message.RecipientType.CC, arr); // 참조자(CC) 설정
             mailmsg.setSentDate(new Date());                      // 발송 날짜/시간 설정 (현재 시각)
             mailmsg.setSubject(mail.getTitle());                  // 메일 제목 설정
 

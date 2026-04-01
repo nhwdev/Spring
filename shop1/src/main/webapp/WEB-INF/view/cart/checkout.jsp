@@ -25,7 +25,7 @@
     </c:forEach>
     <tr><td colspan="4" align="right">총 구입 금액 : <fmt:formatNumber value="${sessionScope.cart.total}" type="currency"/></td></tr>
     <tr><td colspan="4" class="text-center">
-        <a href="end" class="btn btn-primary">확정하기</a>&nbsp;
+        <a href="orderitem" class="btn btn-primary">확정하기</a>&nbsp;
         <a href="../item/list" class="btn btn-success">상품 목록</a>&nbsp;</td></tr>
 </table>
 </body>

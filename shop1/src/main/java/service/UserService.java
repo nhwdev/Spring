@@ -38,12 +38,12 @@ public class UserService {
         return dao.search(user, url);
     }
 
-    public List<User> listUser() {
+    public List<User> listUser() { // 모든 사용자 데이터 리턴
         return dao.list();
     }
 
     // 오버로딩 메서드
-    public List<User> listUser(String[] idchks) {
+    public List<User> listUser(String[] idchks) { // idchks 값에 저장된 userid 값만 목록으로 리턴
         return dao.list(idchks);
     }
 }
