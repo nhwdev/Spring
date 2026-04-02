@@ -34,8 +34,6 @@ public class ItemController {
         return mav;
     }
 
-    // http://localhost:8080/shop1/item/detail?id=1
-    // http://localhost:8080/shop1/item/detail?id=1
     // http://localhost:8080/shop1/item/update?id=1
     @GetMapping({"detail", "delete", "update"}) // GET 방식 요청
     public ModelAndView detail(Integer id) { // id 파리미터값을 id 매개변수에 저장

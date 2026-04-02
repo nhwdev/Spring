@@ -7,7 +7,7 @@
 <body>
 <table>
     <c:if test="${title=='아이디'}"><tr><th>${title} : </th><td>${result}</td></tr></c:if>
-    <c:if test="${title!='아이디'}"><tr><th colspan="2">비밀번호를 이메일로 보내드렸습니다.</th></tr></c:if>
+    <c:if test="${title!='아이디'}"><tr><th colspan="2">비밀번호가 초기화되었습니다. 이메일을 확인하세요!</th></tr></c:if>
     <tr><td colspan="2">
         <c:if test="${title=='아이디'}">
             <input type="button" value="아이디 전송" onclick="sendclose()"></c:if>

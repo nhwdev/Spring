@@ -239,7 +239,7 @@
 </div>
 
 <nav class="navbar navbar-expand-sm navbar-dark">
-    <a class="navbar-brand" href="#">Navbar</a>
+    <a class="navbar-brand" href="#">Spring</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -256,6 +256,9 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="${path}/board/list?boardid=2">자유 게시판</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="${path}/board/list?boardid=3">도움말</a>
             </li>
         </ul>
     </div>

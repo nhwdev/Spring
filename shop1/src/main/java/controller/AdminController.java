@@ -67,8 +67,8 @@ public class AdminController {
             recipient.append(u.getUsername()).append("<").append(u.getEmail()).append(">,");
         }
         mail.setRecipient(recipient.toString()); // 완성된 수신자 목록을 mail 객체에 저장
-        mail.setGoogleid("nhw.dev");             // 발신자 구글 계정 ID (앱 비밀번호 사용 계정)
-        mail.setGooglepw("ffzlunjluxzygeta");    // 앱 비밀번호 (구글 2단계 인증 후 발급받은 비밀번호)
+        mail.setGoogleid("");             // 발신자 구글 계정 ID (앱 비밀번호 사용 계정)
+        mail.setGooglepw("");    // 앱 비밀번호 (구글 2단계 인증 후 발급받은 비밀번호)
         model.addAttribute("mail", mail);        // 뷰(메일 작성 폼)에 mail 객체를 전달
         return "admin/mail";                     // admin/mail.jsp(또는 .html)로 이동
     }

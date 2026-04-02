@@ -284,35 +284,47 @@ public class UserController {
             result = ShopUtil.getRandomString(6, true, true);
             service.pwUser(user.getUserid(), result); // 비밀번호 변경
             Mail mail = new Mail();
-            String id = "nhw.dev";
-            String pw = "ffzlunjluxzygeta";
+            String id = "";
+            String pw = "";
             mail.setGoogleid(id);
             mail.setGooglepw(pw);
             Properties prop = new Properties();
             try{
+                // 1. properties 파일 로드 (SMTP 설정 불러오기)
                 String path = request.getServletContext().getRealPath("/") + "/WEB-INF/CLasses/mail.properties";
                 FileInputStream fis = new FileInputStream(path);
                 prop.load(fis);
+                // 2. Gmail 계정 인증 객체 생성
                 Authenticator auth = new Authenticator() {
                     @Override
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(mail.getGoogleid(), mail.getGooglepw());
                     }
                 };
+                // 3. 수신자 이메일 설정
                 mail.setRecipient(user.getEmail());
+                // 4. SMTP 설정 + 인증 정보로 Gmail 연결 세션 생성
                 Session session = Session.getInstance(prop, auth);
+                // 5. 메일 메시지 객체 생성
                 MimeMessage mailmsg = new MimeMessage(session);
+                // 6. 발신자 설정
                 mailmsg.setFrom(new InternetAddress(mail.getGoogleid() + "@gmail.com"));
+                // 7. 수신자 설정 (인코딩 처리)
                 String email = mail.getRecipient();
                 InternetAddress addrs = new InternetAddress(new String(email.getBytes("utf-8"), "8859_1"));
                 mailmsg.setRecipient(Message.RecipientType.TO, addrs);
+                // 8. 발송 날짜 설정
                 mailmsg.setSentDate(new Date());
+                // 9. 제목 설정
                 mailmsg.setSubject("비밀번호 변경 메일");
+                // 10. 본문 작성
                 MimeBodyPart message = new MimeBodyPart();
-                message.setContent("변경된 비밀번호: " + result, "text/plain; charset=utf-8");
+                message.setContent("변경된 비밀번호: " + result, "text/plain; charset=utf-8"); // text/plain: html❌
+                // 11. 본문을 Multipart로 감싸서 메일에 첨부
                 Multipart multipart = new MimeMultipart();
                 multipart.addBodyPart(message);
                 mailmsg.setContent(multipart);
+                // 12. 메일 전송
                 Transport.send(mailmsg);
             } catch (Exception e) {
                 e.printStackTrace();
