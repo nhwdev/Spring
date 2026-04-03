@@ -27,7 +27,7 @@ public class Board {
     private int grplevel;
     private int grpstep;
 
-    public String getBoardName() {
+public String getBoardName() {
         String boardName = null;
         switch (boardid) {
             case "1":

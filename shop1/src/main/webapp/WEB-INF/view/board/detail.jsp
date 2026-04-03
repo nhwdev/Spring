@@ -40,15 +40,12 @@
             <a href="file/${board.fileurl}">${board.fileurl}</a>
         </c:if></td>
     </tr>
-    <tr>
-        <td colspan="2">
+    <tr><td colspan="2">
             <a href="reply?num=${board.num}" class="btn btn-outline-success">댓글</a>
             <a href="update?num=${board.num}" class="btn btn-outline-primary">수정</a>
             <a href="delete?num=${board.num}" class="btn btn-outline-danger">삭제</a>
             <a href="list?boardid=${board.boardid}" class="btn btn-outline-secondary">목록</a>
-            <span class="readcnt float-right">조회수 ${board.readcnt}</span>
-        </td>
-    </tr>
+            <span class="readcnt float-right">조회수 ${board.readcnt}</span></td></tr>
 </table>
 </body>
 </html>

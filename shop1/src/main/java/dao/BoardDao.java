@@ -25,25 +25,41 @@ public class BoardDao {
         template.getMapper(cls).insert(board);
     }
 
-    public int count(String boardId) {
+    public int count(String boardId, String searchType, String searchContent) {
         param.clear();
         param.put("boardId", boardId);
+        param.put("searchType", searchType);
+        param.put("searchContent", searchContent);
         return template.getMapper(cls).count(param);
     }
 
-    public List<Board> list(Integer pageNum, int limit, String boardId) {
+    public List<Board> list(Integer pageNum, int limit, String boardId, String searchType, String searchContent) {
         param.clear();
         param.put("startRow", (pageNum - 1) * limit);
         param.put("limit", limit);
         param.put("boardId", boardId);
+        param.put("searchType", searchType);
+        param.put("searchContent", searchContent);
         return template.getMapper(cls).selectList(param);
     }
 
-    public Board detail(int num) {
+    public Board detail(Integer num) {
         return template.getMapper(cls).selectOne(num);
     }
 
-    public void readCount(int num) {
+    public void readCount(Integer num) {
         template.getMapper(cls).readCount(num);
+    }
+
+    public void addGrpStep(Board board) {
+        template.getMapper(cls).addGrpStep(board.getGrp(), board.getGrpstep());
+    }
+
+    public void update(Board board) {
+        template.getMapper(cls).update(board);
+    }
+
+    public void delete(int num) {
+        template.getMapper(cls).delete(num);
     }
 }

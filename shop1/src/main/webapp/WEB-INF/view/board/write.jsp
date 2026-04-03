@@ -4,6 +4,17 @@
 <html>
 <head>
     <title>게시글 작성</title>
+    <style>
+        body { padding: 30px; }
+        .table { width: 100%; border-collapse: collapse; max-width: 800px; }
+        .table th, .table td { padding: 10px 14px; border: 1px solid #ddd; vertical-align: middle; }
+        .table th { width: 120px; background: #f5f5f5; text-align: left; white-space: nowrap; }
+        .form-control { width: 100%; padding: 6px 10px; font-size: 14px; box-sizing: border-box; }
+        .btn { padding: 8px 18px; font-size: 14px; text-decoration: none; border-radius: 4px; cursor: pointer; }
+        .btn-primary { background: #337ab7; color: #fff; }
+        .btn-success { background: #5cb85c; color: #fff; }
+        .text-center { text-align: center; }
+    </style>
 </head>
 <body>
 <form:form modelAttribute="board" action="write" enctype="multipart/form-data" name="f">
