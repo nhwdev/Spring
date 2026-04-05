@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -114,6 +115,7 @@ public class BoardController {
          */
         int endPage = startPage + 9;
         if (endPage > maxPage) endPage = maxPage;
+        mav.addObject("date", new Date());
         mav.addObject("boardid", boardId);      // 게시판 종류
         mav.addObject("boardname", boardName);  // 게시판 종류 이름
         mav.addObject("pagenum", pageNum);      // 현재 페이지 번호

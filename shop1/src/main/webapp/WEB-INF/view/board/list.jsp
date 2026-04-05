@@ -52,7 +52,16 @@
                     <c:forEach begin="2" end="${board.grplevel}">&emsp;</c:forEach>↪</c:if>
                 <a href="detail?num=${board.num}&boardid=${boardid}">${(empty board.fileurl) ? board.writer : "".concat(board.title).concat(" 📄")}</a></td>
                 <td>${board.writer}</td>
-                <td><fmt:formatDate value="${board.regdate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+                <td><fmt:formatDate value="${date}" pattern="yyyy-MM-dd" var="formatdate"/>
+                    <fmt:formatDate value="${board.regdate}" pattern="yyyy-MM-dd" var="regdate"/>
+                    <c:choose>
+                        <c:when test="${formatdate == regdate}">
+                        <fmt:formatDate value="${board.regdate}" pattern="HH:mm:ss"/>
+                        </c:when>
+                        <c:otherwise>
+                            <fmt:formatDate value="${board.regdate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+                        </c:otherwise>
+                    </c:choose></td>
                 <td>${board.readcnt}</td>
             </tr>
         </c:forEach>
