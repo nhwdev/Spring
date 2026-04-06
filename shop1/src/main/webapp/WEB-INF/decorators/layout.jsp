@@ -10,10 +10,23 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<%--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">--%>
+<%--    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>--%>
+<%--    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>--%>
+<%--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>--%>
+    <%--
+    summernote 설정
+        summernote : WYSIWYG(What You See Is You Get) 에디터 (CKEditor)
+                     웹에서 서식 설정할 수 있는 에디터
+                     JQuery 기반, BootStrap과 호환
+    --%>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
     <style>
         :root {
             --bg:       #fdf6f8;
@@ -293,7 +306,43 @@
 
 <div class="jumbotron footer-jumbotron text-center" style="margin-bottom:0">
     <p>Footer</p>
+    <hr>
+    <div>
+    <span id="si">
+        <select name="si" onchange="getText('si')">
+            <option value="">시도를 선택하세요</option>
+        </select>
+    </span>
+        <span id="gu">
+            <select name="gu" onchange="getText('gu')">
+                <option value="">구군을 선택하세요</option>
+            </select>
+        </span>
+        <span id="dong">
+            <select name="dong">
+                <option value="">동리를 선택하세요</option>
+            </select>
+        </span>
+    </div>
 </div>
-
+<script>
+    $(function(){
+        getSido();
+    })
+    function getSido() {
+        $.ajax({
+            url : "/ajax/select1",
+            success : function(data) {
+                console.log(data)
+                let arr = data.substring(data.indexOf('[')+1, data.indexOf(']')).split(",")
+                $.each(arr, function(i, item){
+                    $("select[name=si]").append(function() {
+                        return "<option>"+ item + "</option>"
+                    })
+                })
+            }
+        })
+    }
+</script>
 </body>
 </html>

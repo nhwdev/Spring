@@ -1,5 +1,6 @@
 package config;
 
+import intercepter.BoardIntercepter;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
@@ -80,6 +82,15 @@ public class MvcConfig implements WebMvcConfigurer {
         ms.setBasename("messages"); // messages.properties 파일사용
         ms.setDefaultEncoding("UTF-8");
         return ms;
+    }
+
+    // 인터셉터관련 설정
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new BoardIntercepter()) // 인터셉터 객체 설정
+                .addPathPatterns("/board/write")    // URL 정보 추가
+                .addPathPatterns("/board/update")
+                .addPathPatterns("/board/delete");
     }
 
     @Bean

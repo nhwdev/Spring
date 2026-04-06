@@ -1,6 +1,7 @@
 package controller;
 
 import dto.Board;
+import dto.Comment;
 import exception.ShopException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,14 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import service.BoardService;
 
-import javax.naming.Binding;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("board")
@@ -86,13 +86,10 @@ public class BoardController {
         /*
          * countList : 3
          *  (int)((double)3/10 + 0.95) = (int)1.25 → 1
-         *
          * countList : 31
          *  (int)((double)31/10 + 0.95 = (int) 4.05 → 4
-         *
          * countList : 40
          *  (int)((double)40/10 + 0.95 = (int) 4.95 → 4
-         *
          * countList : 501
          *  (int)((double)501/10 + 0.95 = (int) 51.05 → 51
          */
@@ -100,16 +97,12 @@ public class BoardController {
         /*
          * 현재 페이지 : 1 → 1 ~ 10
          *  1 / 10.0 → 0.1 → 0.1 + 0.9 → 1.0 - 1 → (int) (0.0) → 0 * 10 → 0 + 1 → 1
-         *
          * 현재 페이지 : 5 → 1 ~ 10
          *  5 / 10.0 → 0.5 → 0.5 + 0.9 → 1.4 - 1 → (int) (0.4) → 0 * 10 → 0 + 1 → 1
-         *
          * 현재 페이지 : 10 → 1 ~ 10
          *  10 / 10.0 → 1.0 → 1.0 + 0.9 → 1.9 - 1 → (int) (0.9) → 0 * 10 → 0 + 1 → 1
-         *
          * 현재 페이지 : 11 → 11 ~ 20
          *  11 / 10.0 → 1.1 → 1.1 + 0.9 → 2.0 - 1 → (int) (1.0) → 1 * 10 → 10 + 1 → 11
-         *
          * 현재 페이지 : 15 → 11 ~ 20
          *  15 / 10.0 → 1.5 → 1.5 + 0.9 → 2.4 - 1 → (int) (1.4) → 1 * 10 → 10 + 1 → 11
          */
@@ -136,12 +129,50 @@ public class BoardController {
     }
 
     @GetMapping("detail")
-    public String detail(Integer num, Model model) {
+    public String detail(Integer num, Model model, @RequestParam(required = false) String commented) {
         Board board = service.detail(num); // num의 게시물 조회
-        service.readCount(num); // 조회수 증가!
+        if (!Objects.equals(commented, "true")) {
+            service.readCount(num); // 조회수 증가!
+        }
         model.addAttribute("board", board);
+        model.addAttribute("comment", new Comment());
+        List<Comment> commentList = service.commentList(num); // num: 게시글 번호. 게시글 번호에 해당하는 댓글목록 조회
+        model.addAttribute("commlist", commentList);
         return null; // /WEB-INF/view/board/detail.jsp 요청
     }
+
+    @RequestMapping("comment") // 댓글 등록
+    public String comment(@Valid Comment comment, BindingResult bindingResult) {
+
+        String view = "redirect:detail?num=" + comment.getNum() + "&commented=true#comment";
+        if (bindingResult.hasErrors()) {
+            return view; // detail.jsp로 페이지만 이동. board 데이터 없음
+        }
+        int seq = service.commentMaxSeq(comment.getNum()); // 댓글번호 최대값
+        comment.setSeq(++seq); // 댓글 등록전에 seq 설정
+        service.insertComment(comment); // 댓글 등록
+        return view;
+    }
+
+    /*
+     * 1. 파라미터 : num, seq, pass
+     * 2. pass 값과 DB에 등록된 비밀번호 검증
+     *      일치 : 댓글 삭제. detail 페이지 이동
+     *      불일치 : 비밀번호 오류. detail 페이지 이동
+     */
+    @PostMapping("commdel")
+    public String commdel(Comment comment) {
+        String view = "redirect:detail?num=" + comment.getNum() + "&commented=true#comment";
+
+        Comment dbComment = service.getComment(comment.getNum(), comment.getSeq());
+        if (comment.getPass().equals(dbComment.getPass())) {
+            service.deleteComment(comment.getNum(), comment.getSeq());
+        } else {
+            throw new ShopException("비밀번호가 틀립니다.","detail?num=" + comment.getNum() + "&commented=true#comment");
+        }
+        return view;
+    }
+
 
     @GetMapping({"reply", "update", "delete"})
     public String getBoard(Integer num, Model model) {

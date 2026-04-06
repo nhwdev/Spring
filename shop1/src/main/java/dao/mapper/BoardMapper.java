@@ -1,10 +1,7 @@
 package dao.mapper;
 
 import dto.Board;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 import java.util.Map;
@@ -15,12 +12,12 @@ public interface BoardMapper {
     @Select("select ifnull(Max(num), 0) from board")
     int maxNum();
 
-    @Select("insert into board (num, writer, pass, title, content, file1, boardid, regdate, readcnt, grp, grplevel, grpstep) values (#{num}, #{writer}, #{pass}, #{title}, #{content}, #{fileurl}, #{boardid}, now(), 0, #{grp}, #{grplevel}, #{grpstep})")
+    @Insert("insert into board (num, writer, pass, title, content, file1, boardid, regdate, readcnt, grp, grplevel, grpstep) values (#{num}, #{writer}, #{pass}, #{title}, #{content}, #{fileurl}, #{boardid}, now(), 0, #{grp}, #{grplevel}, #{grpstep})")
     void insert(Board board);
 
     @Select({"<script>",
             "select count(*) from board where boardid=#{boardId}",
-            "<if test='searchType != null'>and ${searchType} like '%${searchContent}%'</if>",
+            "<if test='searchType != null'>and #{searchType} like '%${searchContent}%'</if>",
             "</script>"})
     int count(Map<String, Object> param);
     /*

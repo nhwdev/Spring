@@ -6,9 +6,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class BoardDao {
@@ -30,6 +28,7 @@ public class BoardDao {
         param.put("boardId", boardId);
         param.put("searchType", searchType);
         param.put("searchContent", searchContent);
+        List<Map<String, Object>> list = Collections.singletonList(param);
         return template.getMapper(cls).count(param);
     }
 

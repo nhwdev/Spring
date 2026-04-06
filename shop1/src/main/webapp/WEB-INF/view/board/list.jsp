@@ -52,6 +52,7 @@
                     <c:forEach begin="2" end="${board.grplevel}">&emsp;</c:forEach>↪</c:if>
                 <a href="detail?num=${board.num}&boardid=${boardid}">${(empty board.fileurl) ? board.writer : "".concat(board.title).concat(" 📄")}</a></td>
                 <td>${board.writer}</td>
+                <%-- 오늘등록된 게시물의 날짜와, 이전 등록 게시물 날짜 표기르 다르게 수정 --%>
                 <td><fmt:formatDate value="${date}" pattern="yyyy-MM-dd" var="formatdate"/>
                     <fmt:formatDate value="${board.regdate}" pattern="yyyy-MM-dd" var="regdate"/>
                     <c:choose>
@@ -77,7 +78,9 @@
         </td></tr>
     </c:if>
     <c:if test="${countlist == 0}"><tr><td colspan="5">등록된 게시물이 없습니다.</td></tr></c:if>
-    <tr><td colspan="5" class="text-center"><a href="write?boardid=${boardid}" class="btn btn-danger">글쓰기</a></td></tr>
+    <tr><td colspan="5" class="text-center">
+        <c:if test="${param.boardid != 1 || loginUser.userid == 'admin'}">
+        <a href="write?boardid=${boardid}" class="btn btn-danger">글쓰기</a></c:if></td></tr>
 </table>
 <script type="text/javascript">
     function listpage(page) {

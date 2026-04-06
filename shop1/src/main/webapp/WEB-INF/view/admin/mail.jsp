@@ -25,10 +25,27 @@
                 <option value="text/plain; charset=utf-8">TEXT</option></select></td></tr>
         <tr><td>첨부파일1</td><td><input type="file" name="file1"></td></tr>
         <tr><td>첨부파일2</td><td><input type="file" name="file1"></td></tr>
-        <tr><td colspan="2"><form:textarea path="contents" cols="120" rows="10" class="form-control"/>
+        <tr><td colspan="2"><form:textarea path="contents" cols="120" rows="10" class="form-control" id="summernote"/>
                             <form:errors path="contents" class="text-danger"/></td></tr>
         <tr><td colspan="2" class="text-center"><button class="btn btn-primary">메일 보내기</button></td></tr>
     </table>
 </form:form>
+<script type="text/javascript">
+    $("#summernote").summernote({
+        height:300,
+        /*
+         * callbacks : 이벤트 처리
+         * onImageUpload : 이미지 업로드시 처리
+         * onInit : 에디터 로드시. 초기화면 설정 ...
+         */
+        callbacks : {
+            onImageUpload : function(images) {
+                for(let i=0; i < images.length; i++) {
+                    sendFile(images[i])
+                }
+            }
+        }
+    })
+</script>
 </body>
 </html>

@@ -68,3 +68,19 @@ create table board (
    grplevel int(3),       -- 답글의 레벨.
    grpstep int(5)         -- 그룹의 출력 순서
 );
+
+create table comment ( -- 댓글등록
+   num int  references board (num),  -- 게시물 번호
+   seq int,                          -- 댓글번호
+   writer varchar(30),               -- 댓글 작성
+   content varchar(2000),            -- 댓글 내용
+   regdate datetime,                 -- 댓글 작성일시
+   primary key (num,seq)
+)
+select * from comment
+# comment 테이블에 비밀번호 컬럼 추가하기
+alter table comment add column pass varchar(20)   #가장 마지막에 컬럼 추가
+# comment 테이블에 비밀번호 컬럼 제거하기
+alter table comment drop column pass
+# comment 테이블에 writer 컬럼 다음에 비밀번호 컬럼 추가하기
+alter table comment add column pass varchar(20) after writer

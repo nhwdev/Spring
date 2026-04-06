@@ -1,12 +1,16 @@
 package service;
 
 import dao.BoardDao;
+import dao.CommentDao;
 import dto.Board;
+import dto.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import java.io.File;
 import java.util.List;
 
@@ -14,6 +18,8 @@ import java.util.List;
 public class BoardService {
     @Autowired
     BoardDao dao;
+    @Autowired
+    CommentDao commentDao;
 
     public void boardWrite(Board board, HttpServletRequest request) {
         int maxNum = dao.maxNum(); // board 테이블의 최대 num 컬럼의 값을 리턴
@@ -58,7 +64,7 @@ public class BoardService {
         dao.addGrpStep(board); // grp 내의 기존의 원글보다 큰 값을 가진 grpstep의 값을 1 증가
         // 답글의 내용을 DB에 등록
         int max = dao.maxNum(); // board 테이블에서 num 값의 최대값
-        board.setNum(max+1); // 추가될 게시글의 num 값을 설정
+        board.setNum(max + 1); // 추가될 게시글의 num 값을 설정
         board.setGrplevel(board.getGrplevel() + 1); // 원글 + 1
         board.setGrpstep(board.getGrpstep() + 1); // 원글 아래에 출력되도록 설정
         // 원글의 grp, boardid 값은 그대로 유지
@@ -78,4 +84,25 @@ public class BoardService {
     public void deleteBoard(int num) {
         dao.delete(num);
     }
+
+    public int commentMaxSeq(int num) {
+        return commentDao.maxSeq(num);
+    }
+
+    public void insertComment(Comment comment) {
+        commentDao.insert(comment);
+    }
+
+    public List<Comment> commentList(Integer num) {
+        return commentDao.list(num);
+    }
+
+    public Comment getComment(int num, int seq) {
+        return commentDao.getComment(num, seq);
+    }
+
+    public void deleteComment(int num, int seq) {
+        commentDao.delete(num, seq);
+    }
+
 }
