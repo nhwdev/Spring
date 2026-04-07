@@ -24,5 +24,4 @@ public interface CommentMapper {
 
     @Delete("delete from comment where num=#{num} and seq=#{seq}")
     void delete(@Param("num") int num, @Param("seq") int seq);
-
 }

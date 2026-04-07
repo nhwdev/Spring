@@ -143,7 +143,8 @@ public class BoardController {
 
     @RequestMapping("comment") // 댓글 등록
     public String comment(@Valid Comment comment, BindingResult bindingResult) {
-
+        // model : 뷰에 전달할 데이터 정보들
+        // bindingResult : @Valid에 의해서 검증된 겨로가 저장
         String view = "redirect:detail?num=" + comment.getNum() + "&commented=true#comment";
         if (bindingResult.hasErrors()) {
             return view; // detail.jsp로 페이지만 이동. board 데이터 없음

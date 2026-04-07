@@ -50,7 +50,7 @@
             <tr><td>${boardno}</td><c:set var="boardno" value="${boardno-1}"/>
                 <td><c:if test="${board.grplevel > 0}">
                     <c:forEach begin="2" end="${board.grplevel}">&emsp;</c:forEach>↪</c:if>
-                <a href="detail?num=${board.num}&boardid=${boardid}">${(empty board.fileurl) ? board.writer : "".concat(board.title).concat(" 📄")}</a></td>
+                <a href="detail?num=${board.num}&boardid=${boardid}">${(empty board.fileurl) ? board.title : "".concat(board.title).concat(" 📄")}</a></td>
                 <td>${board.writer}</td>
                 <%-- 오늘등록된 게시물의 날짜와, 이전 등록 게시물 날짜 표기르 다르게 수정 --%>
                 <td><fmt:formatDate value="${date}" pattern="yyyy-MM-dd" var="formatdate"/>

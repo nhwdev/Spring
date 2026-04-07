@@ -73,7 +73,7 @@
                 <form:errors path="writer" cssStyle="color: red; font-size:11px;"/>
             </div>
             <div class="col-2">
-                <form:input path="pass" class="form-control form-control-sm" placeholder="비밀번호"/>
+                <form:password path="pass" class="form-control form-control-sm" placeholder="비밀번호"/>
                 <form:errors path="pass" cssStyle="color: red; font-size:11px;"/>
             </div>
             <div class="col-6">

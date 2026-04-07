@@ -17,7 +17,10 @@ public interface BoardMapper {
 
     @Select({"<script>",
             "select count(*) from board where boardid=#{boardId}",
-            "<if test='searchType != null'>and #{searchType} like '%${searchContent}%'</if>",
+            "<if test='searchType != null and searchContent != null and searchContent != \"\"'> and",
+            "(<foreach collection='searchType' item='col' separator='or'>",
+            "${col} like concat('%', #{searchContent}, '%')</foreach>)",
+            "</if>",
             "</script>"})
     int count(Map<String, Object> param);
     /*
@@ -31,9 +34,11 @@ public interface BoardMapper {
      */
     @Select({"<script>",
             select + " where boardid=#{boardId} ",
-                    "<if test='searchType != null'>and ${searchType} like '%${searchContent}%'</if>",
-                    " order by grp desc, grpstep asc limit #{startRow}, #{limit}",
-                    "</script>"})
+            "<if test='searchType != null and searchContent != null and searchContent != \"\"'> and",
+            "(<foreach collection='searchType' item='col' separator='or'>",
+            "${col} like concat('%', #{searchContent}, '%')</foreach>)</if>",
+            " order by grp desc, grpstep asc limit #{startRow}, #{limit}",
+            "</script>"})
     List<Board> selectList(Map<String, Object> param);
 
     @Select(select + " where num=#{value}")

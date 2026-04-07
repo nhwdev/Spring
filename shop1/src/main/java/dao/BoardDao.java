@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class BoardDao {
@@ -25,10 +26,13 @@ public class BoardDao {
 
     public int count(String boardId, String searchType, String searchContent) {
         param.clear();
+        List<String> list = Arrays.asList("title", "writer", "content");
+        List<String> searchTypes = (searchType == null || searchType.isEmpty())
+                ? list : Arrays.stream(searchType.split(","))
+                         .filter(list::contains).collect(Collectors.toList());
+        param.put("searchType", searchTypes);
         param.put("boardId", boardId);
-        param.put("searchType", searchType);
         param.put("searchContent", searchContent);
-        List<Map<String, Object>> list = Collections.singletonList(param);
         return template.getMapper(cls).count(param);
     }
 
@@ -37,7 +41,11 @@ public class BoardDao {
         param.put("startRow", (pageNum - 1) * limit);
         param.put("limit", limit);
         param.put("boardId", boardId);
-        param.put("searchType", searchType);
+        List<String> list = Arrays.asList("title", "writer", "content");
+        List<String> searchTypes = (searchType == null || searchType.isEmpty())
+                ? list : Arrays.stream(searchType.split(","))
+                         .filter(list::contains).collect(Collectors.toList());
+        param.put("searchType", searchTypes);
         param.put("searchContent", searchContent);
         return template.getMapper(cls).selectList(param);
     }

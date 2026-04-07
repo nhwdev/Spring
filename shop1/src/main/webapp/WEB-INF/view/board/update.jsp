@@ -49,6 +49,24 @@
             }
         }
     })
+    function sendFile(file) {
+        let data = new FormData() // 파일업로드를 위한 컨테이너 객체 생성
+        data.append("image", file) // file : 업로드 되는 데이터
+        $.ajax({
+            url: "/shop1/ajax/uploadImage",
+            type: "post", // poist 방식의 요청
+            data: data, // FormData 객체
+            processData: false, // 문자열 전송❌ 파일업로드시 사용
+            contentType: false, // 컨텐트 타입 설정❌ 파일업로드시 사용
+            success: function (src) {
+                console.log(src) // 업로드된 파일의 이름
+                $("#summernote").summernote("insertImage", src)
+            },
+            error: function (e) {
+                alert("이미지 업로드 실패: " + e.status)
+            }
+        })
+    }
 </script>
 </body>
 </html>
