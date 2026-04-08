@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<!--
+
+-->
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>간단한 막대 그래프 작성</title>
+</head>
+<body>
+<div>
+    <canvas id="myChart" src=""></canvas>
+</div>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.0/chart.min.js"></script>
+<script type="text/javascript">
+    const ctx = document.getElementById("myChart") // canvas 객체 : 그래프의 영역
+    // new Chart(영역(canvas객체), {옵션})
+    new Chart(ctx, {
+        type: 'bar', // bar : 막대 그래프, line : 선 그래프, pie : 파이 그래프
+        data: { // 그래프에 표시될 데이터
+            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'], // X축
+            // datasets : [배열] → 배열의 요소별 한개의 막대 출력
+            datasets: [{ // 막대표시
+                label: '# of Votes1',
+                data: [12, 19, 3, 5, 2, 3], // X축의 값과 매칭
+                boarderWidth: 1,
+                backgroundColor: ['red', 'blue', 'yellow', 'green', 'purple', 'orange']
+            }, {
+                label: '# of Votes2',
+                data: [5, 9, 1, 10, 15, 3],
+                borderWidth: 1,
+                backgroundColor: ['red', 'blue', 'yellow', 'green', 'purple', 'orange']
+            }]
+        },
+        options: { // 그래프 출력시 처리되는 다양한 옵션 설정
+            scales: {y: {beginAtZero: true}},
+            legend: {position: 'right'}
+        }
+    })
+</script>
+</body>
+</html>

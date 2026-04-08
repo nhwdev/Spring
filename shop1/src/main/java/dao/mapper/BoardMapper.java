@@ -55,4 +55,24 @@ public interface BoardMapper {
 
     @Delete("delete from board where num=#{value}")
     void delete(int num);
+
+    /*
+     * List<Map<String, Object>> : 1개의 레코드를 Map 생성 하고, 목록을 List로 전달
+     * [
+     *  {"writer":"홍길동", "cnt":3},
+     *  {"writer":"111", "cnt":2},
+     *  ...
+     * ]
+     *
+     * board 테이블에서 boardid=2 또는 3 인 데이터 중 글작성자(writer) 별 레코드갯수 (cnt) 조회
+     *
+     *  writer  cnt → 조회 → Map<String(컬럼명), Object(컬럼의 값)>
+     *  홍길동   3             {writer:홍길동, cnt:3}
+     *   111     2             {writer:111   , cnt:2}
+     */
+    @Select("select writer,count(*) cnt from board where boardid=#{value} group by writer order by 2 desc limit 0, 7")
+    List<Map<String, Object>> graph1(String id);
+
+    @Select("SELECT date_format(regdate, '%Y-%m-%d') date,COUNT(*) cnt FROM board where boardid=#{value} GROUP BY date_format(regdate, '%Y-%m-%d') ORDER BY 1 LIMIT 0, 7")
+    List<Map<String, Object>> graph2(String id);
 }

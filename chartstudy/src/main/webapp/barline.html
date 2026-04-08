@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>막대 그래프와 선그래프</title>
+</head>
+<body>
+<div style="width: 75%">
+    <canvas id="canvas"></canvas>
+</div>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+<script type="text/javascript">
+    let Months = ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"]
+    let chartData = {
+        labels: Months,
+        datasets: [
+            {
+                type: "line",
+                label: "영업부",
+                borderColor: "#FF00FF",
+                borderWidth: 5,
+                fill: true,  // ✅ file → fill
+                data: [10, 15, 25, 55, -25, -65, 30, 56, 78, 12, 5, 25]
+            }, {
+                type: "bar",
+                label: "영업부 막대",  // ✅ 라벨 구분
+                backgroundColor: "#A566FF",
+                borderColor: "white",
+                data: [10, 15, 25, 55, -25, -65, 30, 56, 78, 12, 5, 25]
+            }, {
+                type: "line",
+                label: "총무부",
+                borderColor: "#00FF00",
+                fill: false,
+                data: [23, 15, 25, 35, 25, 62, 10, 23, 65, 45, 56, 58]
+            }, {
+                type: "bar",
+                label: "총무부 막대",  // ✅ 라벨 구분
+                backgroundColor: "#86E57F",  // ✅ 색상 추가
+                borderColor: "#86E57F",
+                data: [23, 15, 25, 35, 25, 62, 10, 23, 65, 45, 56, 58]
+            }
+        ]
+    }
+    window.onload = function() {
+        let ctx = document.getElementById("canvas")
+        new Chart(ctx, {
+            type : "bar",
+            data : chartData,
+            options : {
+                responsive : true,
+                title : {
+                    display : true,
+                    text : "막대그래프와 선그래프"
+                },
+                legend : {
+                    display : true
+                },
+                scales : {
+                    yAxes : [{
+                        display : true,
+                        scaleLabel : {
+                            display : true,
+                            labelString : "부서별 실정 증가율"
+                        }
+                    }]
+                }
+            }
+        })
+    }
+</script>
+</body>
+</html>

@@ -1,11 +1,9 @@
 package service;
 
-import dao.ShopDao;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,8 +16,6 @@ import java.util.*;
 
 @Service
 public class ShopService {
-    @Autowired
-    private ShopDao shopDao;
 
     public String sidoSelect1(String si, String gu, HttpServletRequest request) {
         BufferedReader br = null;

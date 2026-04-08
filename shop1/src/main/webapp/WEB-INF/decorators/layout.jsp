@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
+<html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="path" value="${pageContext.request.contextPath}"/>
 
@@ -28,6 +29,7 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
     <style>
         :root {
             --bg: #fdf6f8;
@@ -295,25 +297,47 @@
             </li>
         </ul>
     </div>
+    <ul class="navbar-nav d-flex flex-row">
+        <li class="nav-item">
+            <c:if test="${empty sessionScope.loginUser}">
+                <a href="${path}/user/login" class="nav-link">로그인</a>
+            </c:if>
+        </li>
+        <li class="nav-item">
+            <c:if test="${empty sessionScope.loginUser}">
+                <a href="${path}/user/join" class="nav-link">회원가입</a>
+            </c:if>
+        </li>
+        <li class="nav-item">
+            <c:if test="${!empty sessionScope.loginUser}">
+                ${sessionScope.loginUser.username}님&nbsp;&nbsp;
+                <a href="${path}/user/logout" class="nav-link d-inline">로그아웃</a>
+            </c:if>
+        </li>
+    </ul>
 </nav>
-
 <div class="container" style="margin-top:30px">
     <div class="row">
         <div class="col-sm-4">
-            <ul class="nav nav-pills flex-column">
-                <li class="nav-item">
-                    <c:if test="${empty sessionScope.loginUser}">
-                        <a href="${path}/user/login" class="nav-link">로그인</a>
-                        <a href="${path}/user/join" class="nav-link">회원가입</a>
-                    </c:if>
-                    <c:if test="${!empty sessionScope.loginUser}">${sessionScope.loginUser.username}님이 로그인 하셨습니다.&nbsp;&nbsp;<a href="${path}/user/logout">로그아웃</a>
-                    </c:if>
-                </li>
-            </ul>
             <hr class="d-sm-none" style="border-color: var(--border);">
             <h4>수출입 은행 환율 정보</h4>
             <div style="width:100%">
                 <div id="exchange" style="width:70%;maragin:6px"></div>
+            </div>
+            <h4>게시판 현황</h4>
+            <div class="container text-center">
+                <input type="radio" name="pie" onchange="piegraph(2)" checked="checked">자유게시판 &nbsp;&nbsp;
+                <input type="radio" name="pie" onchange="piegraph(3)">도움말 &nbsp;&nbsp;
+                <div id="piecontainer" style="width:100%; border:1px solid #ffffff">
+                    <canvas id="canvas1" style="width:100%"></canvas>
+                </div>
+            </div>
+            <div class="container text-center">
+                <input type="radio" name="barline" onchange="barlinegraph(2)" checked="checked">자유게시판 &nbsp;&nbsp;
+                <input type="radio" name="barline" onchange="barlinegraph(3)">도움말 &nbsp;&nbsp;
+                <div id="barlinecontainer" style="width:100%; border:1px solid #ffffff">
+                    <canvas id="canvas2" style="width:100%"></canvas>
+                </div>
             </div>
         </div>
         <div class="col-sm-8">
@@ -341,12 +365,15 @@
         </span>
     </div>
 </div>
+<%---------------------------------------------------------------------------------------------------------------%>
 <script>
     $(function () {  // 화면 준비되면
         getSido(); // 호이스팅기능: 선언보다 먼저 호출되는 것이 가능
         // exchangeString();
         exchangeJson();
         logo()
+        piegraph(2) //글쓴이별 게시글 등록 건수를 파이그래프로 출력
+        barlinegraph(2)
     })
 
     function getSido() {
@@ -431,15 +458,166 @@
             }
         })
     }
+
     function logo() {
         $.ajax({
             url: "/shop1/ajax/logoCrawling",
             type: "GET",
             success: function (src) {
-            $("#logoCrowling").append('<img id="crawlImg" src="' + src +'">')
+                $("#logoCrowling").append('<img id="crawlImg" src="' + src + '">')
             },
             error: function (e) {
                 alert("크롤링 실패 : " + e.status)
+            }
+        })
+    }
+
+    function piegraph(id) {
+        $.ajax("${path}/ajax/graph1?boardid=" + id, {
+            success: function (json) {
+                let canvas = "<canvas id='canvas1' style='width:100%'></canvas>" // 새로운 canvas 객체 생성 div객체 저장
+                $("#piecontainer").html(canvas)
+                pieGraphPrint(json, id)
+            },
+            error: function (e) {
+                alert("서버오류: " + e.status)
+            }
+        })
+    }
+
+    function pieGraphPrint(arr, id) { // arr : [{홍길동:3}, {111:2}]
+        let colors = [] // 색을 랜덤하게 arr 요소의 갯수 생성
+        let writers = [] // x축에 표시할 데이터
+        let datas = [] // 파이그래프 데이터값
+
+        let randomColorFactor = function () { // 0 ~ 255 사이의 임의의 수 리턴
+            return Math.round(Math.random() * 255)
+        }
+
+        let randomColor = function (opacity) { // rgba(red, green, blue, 투명도)
+            return "rgba(" + randomColorFactor() + "," + randomColorFactor() + "," + randomColorFactor() + "," + (opacity || '.3') + ")"
+        }
+
+        $.each(arr, function (index) {
+            colors[index] = randomColor(0.5) // 파이그래프 색 설정
+            for (key in arr[index]) { // arr[index] : {홍길동 : 3}
+                writers.push(key)
+                datas.push(arr[index][key])
+            }
+        })
+        let title = (id == 2) ? "자유게시판" : "도움말"
+
+        let config = {
+            type: 'pie', // 파이그래프
+            data: {
+                datasets: [{
+                    data: datas, backgroundColor: colors
+                }],
+                labels: writers
+            },
+            options: {
+                responsive: true,
+                legend: {position: 'bottom'}, // 범례
+                title: {
+                    display: true,
+                    text: '글쓴이 별 ' + title + ' 등록 건수',
+                    position: 'top'
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
+        }
+        let ctx = document.getElementById("canvas1")
+        new Chart(ctx, config)
+    }
+
+    function barlinegraph(id) {
+        $.ajax("${path}/ajax/graph2?boardid=" + id, {
+            success: function (json) {
+                let canvas = "<canvas id='canvas2' style='width:100%'></canvas>"
+                $("#barlinecontainer").html(canvas)
+                barlineGraphPrint(json, id)
+            },
+            error: function (e) {
+                alert("서버오류: " + e.status)
+            }
+        })
+    }
+
+    function barlineGraphPrint(arr, id) {
+
+        // ============ 랜덤 색상 생성 함수 ============
+        let randomColorFactor = function () {
+            return Math.round(Math.random() * 255)
+        }
+        let randomColor = function (opacity) {
+            return "rgba(" + randomColorFactor() + "," + randomColorFactor() + "," + randomColorFactor() + "," + (opacity || '.3') + ")"
+        }
+
+        // ============ 1단계: 데이터 준비 ============
+        let labels = []       // x축 날짜
+        let datas = []        // 건수
+        let borderColors = [] // 선그래프 색
+        let bgColors = []     // 막대그래프 색
+
+        // arr을 순회하면서 Chart.js가 읽을 수 있는 배열로 가공
+        $.each(arr, function (index, map) {
+            for (key in map) {
+                labels.push(key)      // 날짜 (key)
+                datas.push(map[key])  // 건수 (value)
+            }
+            borderColors.push(randomColor(1)) // 랜덤 색 생성
+            bgColors.push(randomColor(1))
+        })
+
+        // ============ 2단계: 차트 데이터 포장 ============
+        let chartData = {
+            labels: labels,    // x축에 날짜 표시
+            datasets: [{
+                type: 'line',          // 선그래프
+                borderWidth: 2,
+                borderColor: borderColors,
+                label: 'line',
+                fill: false,
+                data: datas
+            }, {
+                type: 'bar',           // 막대그래프
+                label: 'bar',
+                backgroundColor: bgColors,
+                data: datas,           // 선/막대 같은 데이터 사용
+                borderWidth: 2
+            }]
+        }
+
+        // ============ 3단계: canvas에 차트 그리기 ============
+        let ctx = document.getElementById('canvas2')
+        new Chart(ctx, {
+            type: 'bar',
+            data: chartData,   // 2단계에서 만든 데이터
+            options: {
+                responsive: true,
+                title: {display: true, text: '게시판 최근 일자별 등록 건수'},
+                legend: {display: false},
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: "게시글 등록일",
+                            stacked: true
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: "작성 건수"
+                        },
+                        stacked: true
+                    }]
+                }
             }
         })
     }

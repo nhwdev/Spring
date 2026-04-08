@@ -12,7 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class BoardService {
@@ -105,4 +108,41 @@ public class BoardService {
         commentDao.delete(num, seq);
     }
 
+    public Map<String, Integer> graph1(String id) { // 게시판 종류별, 글작성자별 등록 건수
+        /*
+         * list :
+         * [
+         *  {"writer":"홍길동", "cnt":3},
+         *  {"writer":"111", "cnt":2},
+         *  ...
+         * ]
+         * → 글작성자 : 게시물 등록 건수
+         * {
+         *  "홍길동" : 3,
+         *  "111"    : 2,
+         *   ...
+         * }
+         */
+        List<Map<String, Object>> list = dao.graph1(id);
+        //        Map<String, Integer> map = new HashMap<>(); // {홍길동 : 3, 111 : 2, ...}
+        // m : {"writer":"홍길동", "cnt":3}
+//        for (Map<String, Object> m : list) {
+//            String writer = (String) m.get("writer");
+//            long cnt = (Long) m.get("cnt"); // database에서 count(*)는 long값으로 리턴
+//            map.put(writer, (int) cnt);
+//        }
+
+        return list.stream().collect(Collectors.toMap(
+                m -> (String) m.get("writer"),
+                m -> ((Long) m.get("cnt")).intValue()
+        ));
+    }
+
+    public Map<String, Integer> graph2(String id) {
+        List<Map<String, Object>> list = dao.graph2(id);
+        return list.stream().collect(Collectors.toMap(
+                m -> (String) m.get("date"),
+                m -> ((Long)m.get("cnt")).intValue()
+        ));
+    }
 }

@@ -5,9 +5,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import service.BoardService;
 import service.ShopService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +36,8 @@ import java.util.Map;
 public class AjaxController {
     @Autowired
     private ShopService service;
+    @Autowired
+    private BoardService boardService;
 
     @RequestMapping(value = "select1", produces = "text/plain; charset=utf-8")
     // produces : 클라이언트에 정보 전달
@@ -66,5 +71,21 @@ public class AjaxController {
     @RequestMapping(value = "logoCrawling")
     public String logoCrawling() {
         return service.logoCrawling();
+    }
+
+    @RequestMapping("graph1")
+    public List<Map.Entry<String, Integer>> graph1(@RequestParam("boardid") String id) {
+        Map<String, Integer> map = boardService.graph1(id);
+        List<Map.Entry<String, Integer>> list = new ArrayList<>(map.entrySet());
+        list.sort((a, b) -> b.getValue() - a.getValue());
+        return list;
+    }
+
+    @RequestMapping("graph2")
+    public List<Map.Entry<String, Integer>> graph2(@RequestParam("boardid") String id) {
+        Map<String, Integer> map = boardService.graph2(id);
+        List<Map.Entry<String,Integer>> list = new ArrayList<>(map.entrySet());
+        list.sort((a,b) -> a.getKey().compareTo(b.getKey()));
+        return list;
     }
 }
