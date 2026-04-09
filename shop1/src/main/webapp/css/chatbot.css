@@ -1,0 +1,122 @@
+@charset "UTF-8";
+
+/* 전체 컨테이너 */
+.chat-container {
+    width: 400px;
+    height: 600px;
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* 헤더 */
+.chat-header {
+    background: linear-gradient(135deg, #1A6511, #2e8b57);
+    color: white;
+    padding: 15px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 18px;
+}
+
+/* 채팅 영역 */
+.chat-body {
+    flex: 1;
+    background: #f5f7fb;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+/* 입력 영역 */
+.chat-input-area {
+    display: flex;
+    padding: 10px;
+    background: #fff;
+    border-top: 1px solid #ddd;
+}
+
+.chat-input-area textarea {
+    flex: 1;
+    resize: none;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    height: 50px;
+    outline: none;
+}
+
+.chat-input-area button {
+    margin-left: 10px;
+    border: none;
+    background: #1A6511;
+    color: white;
+    padding: 0 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.chat-input-area button:hover {
+    background: #2e8b57;
+}
+
+/* 채팅 공통 */
+.chat {
+    display: flex;
+    margin: 10px 0;
+}
+
+/* 아이콘 */
+.chat .icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+/* 봇 */
+.chat.bot {
+    align-items: flex-start;
+}
+
+.chat.bot .icon {
+    background: #ddd;
+}
+
+.chat.bot .textbox {
+    margin-left: 10px;
+    background: #fff;
+    border-radius: 15px;
+    padding: 10px;
+    max-width: 70%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* 사용자 */
+.chat.me {
+    flex-direction: row-reverse;
+}
+
+.chat.me .icon {
+    background: #F9EB54;
+}
+
+.chat.me .textbox {
+    margin-right: 10px;
+    background: #F9EB54;
+    border-radius: 15px;
+    padding: 10px;
+    max-width: 70%;
+}
+
+/* 스크롤 예쁘게 */
+.chat-body::-webkit-scrollbar {
+    width: 6px;
+}
+.chat-body::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}

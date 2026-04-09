@@ -17,7 +17,7 @@ id="WebApp_ID" version="4.0">
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.xhtml</welcome-file>
   </welcome-file-list>
-  
+
 <servlet>
    <servlet-name>shop</servlet-name>
    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -29,6 +29,7 @@ id="WebApp_ID" version="4.0">
      <param-name>contextConfigLocation</param-name>
      <param-value>config.MvcConfig
                   config.DBConfig
+                  config.WebSocketConfig
      </param-value>
    </init-param>
    <!-- 웹어플리케이션시 시작하면 서블릿을 로드 -->

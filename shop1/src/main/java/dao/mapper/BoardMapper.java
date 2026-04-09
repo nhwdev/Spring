@@ -73,6 +73,7 @@ public interface BoardMapper {
     @Select("select writer,count(*) cnt from board where boardid=#{value} group by writer order by 2 desc limit 0, 7")
     List<Map<String, Object>> graph1(String id);
 
+    // date_format(날짜, 패턴) : 날짜를 패턴에 맞게 문자열로 리턴. 오라클:to_char() 이용
     @Select("SELECT date_format(regdate, '%Y-%m-%d') date,COUNT(*) cnt FROM board where boardid=#{value} GROUP BY date_format(regdate, '%Y-%m-%d') ORDER BY 1 LIMIT 0, 7")
     List<Map<String, Object>> graph2(String id);
 }

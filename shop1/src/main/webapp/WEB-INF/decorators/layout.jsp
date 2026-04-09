@@ -1,9 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!DOCTYPE html>
-<html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="path" value="${pageContext.request.contextPath}"/>
-
+<!DOCTYPE html>
+<html>
 <head>
     <title><sitemesh:write property="title"/></title>
     <meta charset="utf-8">
@@ -24,7 +23,6 @@
     --%>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -266,11 +264,11 @@
     </style>
     <sitemesh:write property="head"/>
 </head>
+<%-----------------------------------------------------------------------------------------------------------------%>
 <body>
-
 <div class="jumbotron text-center">
     <h1>클라우드 활용 자바 스프링 개발 부트캠프</h1>
-    <p>Resize this responsive page to see the effect!</p>
+    <p>Cloud-Based Java Spring Development Bootcamp</p>
 </div>
 
 <nav class="navbar navbar-expand-sm navbar-dark">
@@ -294,6 +292,12 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="${path}/board/list?boardid=3">도움말</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="${path}/chat/chat">채팅</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="${path}/chat/chatbot">챗봇</a>
             </li>
         </ul>
     </div>
@@ -365,12 +369,12 @@
         </span>
     </div>
 </div>
-<%---------------------------------------------------------------------------------------------------------------%>
+<%-----------------------------------------------------------------------------------------------------------------%>
 <script>
     $(function () {  // 화면 준비되면
         getSido(); // 호이스팅기능: 선언보다 먼저 호출되는 것이 가능
         // exchangeString();
-        exchangeJson();
+        exchangeJson()
         logo()
         piegraph(2) //글쓴이별 게시글 등록 건수를 파이그래프로 출력
         barlinegraph(2)
