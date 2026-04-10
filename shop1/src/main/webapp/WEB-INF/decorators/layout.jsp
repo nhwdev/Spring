@@ -294,6 +294,9 @@
                 <a class="nav-link" href="${path}/board/list?boardid=3">도움말</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="${path}/chat/naversearch">네이버 검색</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="${path}/chat/chat">채팅</a>
             </li>
             <li class="nav-item">

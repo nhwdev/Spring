@@ -24,6 +24,7 @@
         <button type="button" onclick="win_open('pwsearch')" class="btn btn-secondary">비밀번호 찾기</button>
     </td></tr>
   </table>
+    <p><a href="${apiURL}"><img height="30" src="http://static.nid.naver.com/oauth/small_g_in.PNG" alt="NAVER"></a>
 </form:form>
 <script type="text/javascript">
     function win_open(page) {
